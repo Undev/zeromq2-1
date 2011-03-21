@@ -55,11 +55,11 @@ int zmq::http_socket_t::write (const void *data, int size) {
 	// Init header
 	if (!write_end) {
 		int length = sprintf(write_buf
-					, "HTTP/1.1 POST\r\n"\
+					, "HTTP/1.1\r\n"\
 					  "Connection: Keep-Alive\r\n"\
 					  "Content-Type: application/octet-stream\r\n"\
 					  "Content-Length: %d\r\n"\
-					  "\r\n\r\n", size);
+					  "\r\n", size);
 
 		assert(length > 0 && length < HTTP_BUF_SIZE);
 
@@ -112,7 +112,7 @@ int zmq::http_socket_t::read (void *data, int size) {
 	
 	if (it == read_buf) {
 		// Check if header is complete
-		it = strstr(it, "\r\n\r\n\r\n");
+		it = strstr(it, "\r\n\r\n");
 		if (!it) { return 0; }
 
 		//{ // Logging out received header
@@ -120,7 +120,7 @@ int zmq::http_socket_t::read (void *data, int size) {
 		//	LOGD() << header << LOG_ENDL();
 		//}
 
-		it += 6; // skipping \r\n
+		it += 4; // skipping \r\n
 
 		// Moving data
 		std::copy(it, read_pos, read_buf);
