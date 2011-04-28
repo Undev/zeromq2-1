@@ -105,7 +105,7 @@ int zmq::http_socket_t::read (void *data, int size) {
 	if (nbytes <= 0) { return nbytes; }
 	
 	read_pos += nbytes;
-	*read_pos = NULL;
+	*read_pos = '\0';
 
 	// Determing header position
 	char *it = strstr(read_buf, "HTTP/");
@@ -124,7 +124,7 @@ int zmq::http_socket_t::read (void *data, int size) {
 
 		// Moving data
 		std::copy(it, read_pos, read_buf);
-		*(read_pos -= it - read_buf) = NULL;
+		*(read_pos -= it - read_buf) = '\0';
 
 		// Next header position
 		it = strstr(read_buf, "HTTP/");
@@ -139,7 +139,7 @@ int zmq::http_socket_t::read (void *data, int size) {
 	
 	// Moving data
 	std::copy(read_buf + nbytes, read_pos, read_buf);
-	*(read_pos -= nbytes) = NULL;
+	*(read_pos -= nbytes) = '\0';
 
 	return nbytes; 
 }
